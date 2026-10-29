@@ -158,6 +158,7 @@ from your game and can open the view that shows the answer. For example:
 - "How many merits do I need for rank 34?"
 - "Where's the nearest raw material trader?"
 - "What do I still need for my FSD blueprint?"
+- "Which of my ships can carry 400 tonnes?"
 - "Where should I mine Platinum for merits?"
 
 The answers come from a language model you choose in Settings, AGENT MODEL:
