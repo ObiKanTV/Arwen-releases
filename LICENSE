@@ -1,11 +1,21 @@
 Arwen
 Copyright (c) 2026 ObiKan. All rights reserved.
 
-Arwen is not open source. This copy is for people invited to test it.
+Arwen is free to download and use. It is not open source.
 
-You may install and use Arwen on your own computers for your own play while you are an invited
-tester. You may not copy, share, publish, sell, rent or give away Arwen or its installer, or change,
-decompile or reverse engineer it, except where the law allows this regardless of these terms.
+You may:
+
+- download Arwen from its official releases page, https://github.com/ObiKanTV/Arwen-releases/releases,
+  and install it on your own computers;
+- use it for your own play, including while you stream or record.
+
+You may not:
+
+- share, publish, sell, rent or give away Arwen or its installer; point people to the official
+  releases page instead;
+- change, decompile or reverse engineer Arwen, except where the law allows this regardless of
+  these terms;
+- use Arwen, or any part of it, in another product or service.
 
 Arwen is provided "as is", without warranty of any kind, express or implied, including fitness for a
 particular purpose. In no event shall the author be liable for any claim, damages or other
