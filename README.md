@@ -94,6 +94,10 @@ jumps and distance left. A star you can't scoop fuel from is marked, so you know
 Your ship's loadout and engineering, its power use, and every ship you own with where it's stored.
 Arwen remembers your stored ships between sessions; you don't need to open a shipyard first.
 
+**Open in Coriolis** shows the ship's build, with all its engineering, in [Coriolis](https://coriolis.io) in
+your browser. **Copy for Coriolis** copies it instead: in Coriolis, choose Import and paste. It works for any ship
+you've flown since your journals began.
+
 ### Engineering
 
 Ship and on-foot engineering, from unlocking engineers to the last roll.
