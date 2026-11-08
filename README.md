@@ -262,8 +262,10 @@ Ship and on-foot engineering, from unlocking engineers to the last roll.
 - **Trades:** the plan pays for what you're short with what the plan doesn't need, at the cheapest
   rate: one spare material a grade up (1 for 3) before six a grade down, and a stock near its cap
   before a small one. It also trades between columns of the trader (6 for 1 at the same grade,
-  2 for 1 a grade down), but then always leaves a quarter of the cap in your hold (25 of a G5,
-  37 of a G4) and never trades up a grade, which would cost 36 for 1.
+  2 for 1 a grade down). It tries to leave a quarter of the cap of those in your hold (25 of a G5,
+  37 of a G4), but uses that too before it sends you to collect anything, and it never trades up a
+  grade from another column, which would cost 36 for 1. What's left after every trade is what you
+  have to collect.
 - **Tech broker:** pin the broker unlocks you want and see what they still need.
 - **On foot:** your suits and weapons, with their grade and modification slots (one per grade above
   1, four at G5). Track the grades and modifications you want, and Arwen lists the materials for
@@ -317,6 +319,7 @@ from your game and can open the view that shows the answer. For example:
 - "Where's the nearest raw material trader?"
 - "What do I still need for my FSD blueprint?"
 - "Which of my ships can carry 400 tonnes?"
+- "Which of my ships have a collector limpet controller?"
 - "Where should I mine Platinum for merits?"
 
 The answers come from a language model you choose in Settings, AGENT MODEL. The chat is optional
