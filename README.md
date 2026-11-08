@@ -55,8 +55,10 @@ off and says why, and the status bar shows **AI CHAT · OLLAMA NOT RUNNING** or
 ### Requirements
 
 - **[Ollama](https://ollama.com)**, free, which runs the model on your PC (or another PC on your
-  network). Nothing you ask leaves your network. A cloud model (OpenAI-compatible or Anthropic, with
-  your own API key) works too: pick it in Settings, AGENT MODEL.
+  network). Nothing you ask leaves your network. No room for a model on your PC? A cloud model works
+  too, with your own API key: see [Using OpenRouter instead](#using-openrouter-instead) (one key for
+  many models, a fraction of a cent per question), or pick OpenAI-compatible or Anthropic in
+  Settings, AGENT MODEL.
 - **A model that can call tools.** Arwen answers by calling its tools (your ship, your materials, the
   market) and the model only puts the results into words, so a model without tool calling can't
   answer. The default is `bonsai-2:9b`. Other models with tool calling work too, for example
@@ -107,6 +109,38 @@ ollama ps
 The PROCESSOR column says where the model runs. `100% GPU` is what you want. Something like
 `45%/55% CPU/GPU` means it didn't fit on the graphics card and part of it runs on the processor:
 answers will be slow, and the game may stutter. Use the tips under [Requirements](#requirements).
+
+### Using OpenRouter instead
+
+[OpenRouter](https://openrouter.ai) runs models for you online, so you need no Ollama and no room on
+your graphics card. One account and one key give you models from many companies, and you pay
+OpenRouter for what you use. The catch: your questions, and the game data Arwen's tools return for
+them (your location, ship, materials), go to OpenRouter and the company whose model you picked.
+
+1. Make an account at [openrouter.ai](https://openrouter.ai), add a few dollars of credit, and create
+   an API key under **Keys**. Copy it; OpenRouter shows it only once.
+2. In Arwen, open **Settings, AGENT MODEL**: **PROVIDER** "OpenRouter (cloud, many models)", **MODEL**
+   the model's name as OpenRouter writes it (see below), **API KEY** the key you copied. Press
+   **USE THIS MODEL**. The key goes to Windows Credential Manager, never to a file.
+3. Ask something, for example "where am I?". The status bar says **AI CHAT CONNECTED** as soon as a
+   key is saved, so the first answer is the real test.
+
+The model has to support tool calling. These answered correctly in testing, with a few cents of
+credit lasting a long time:
+
+| Model | Answers | Notes |
+| --- | --- | --- |
+| `openai/gpt-oss-120b` | in a few seconds | the cheapest; a good first choice |
+| `qwen/qwen3.5-9b` | in a few seconds | the same family as the local default |
+| `openai/gpt-5-mini` | in 10 to 30 seconds | thinks first; the most careful answers |
+
+A set of test questions across these three cost about one cent in total. Models whose names end in
+`:free` cost nothing, but OpenRouter limits them to a few questions a minute, and the chat then
+says to wait. On [openrouter.ai/models](https://openrouter.ai/models), filter by **Tools** to see
+which models can use Arwen's tools, and their prices.
+
+The **Let the model think before it answers** setting only applies to Ollama; a cloud model thinks or
+not as it was built to.
 
 ### Using Claude Desktop instead
 
@@ -225,6 +259,11 @@ Ship and on-foot engineering, from unlocking engineers to the last roll.
 - **The plan:** numbered steps to get there: which engineers to unlock, materials to trade or
   gather, and which engineer to visit for what. It picks the engineers nearest your home, so it
   won't send you to Colonia from the bubble. Progress ticks off as you play.
+- **Trades:** the plan pays for what you're short with what the plan doesn't need, at the cheapest
+  rate: one spare material a grade up (1 for 3) before six a grade down, and a stock near its cap
+  before a small one. It also trades between columns of the trader (6 for 1 at the same grade,
+  2 for 1 a grade down), but then always leaves a quarter of the cap in your hold (25 of a G5,
+  37 of a G4) and never trades up a grade, which would cost 36 for 1.
 - **Tech broker:** pin the broker unlocks you want and see what they still need.
 - **On foot:** your suits and weapons, with their grade and modification slots (one per grade above
   1, four at G5). Track the grades and modifications you want, and Arwen lists the materials for
@@ -285,8 +324,8 @@ and needs that model; [AI chat (optional)](#ai-chat-optional) has the setup.
 
 - **Local (recommended):** [Ollama](https://ollama.com) and a model, e.g. `ollama pull bonsai-2:9b`.
   It runs on your PC, or another PC on your network; nothing leaves your network.
-- **Cloud:** an OpenAI-compatible service or Anthropic, with your own API key. Your question and
-  the game data it needs then go to that service.
+- **Cloud:** [OpenRouter](#using-openrouter-instead), another OpenAI-compatible service, or
+  Anthropic, with your own API key. Your question and the game data it needs then go to that service.
 
 Voice input runs on your PC's processor, in English. The speech model (about 70 MB) downloads the
 first time you use it. The microphone is only open while you hold the key, and nothing is recorded.
@@ -374,6 +413,19 @@ with `ollama pull <model>`, using the name shown in the message, or change **MOD
 
 Arwen's answers come from its tools, so the model has to support tool calling. Pick one that does,
 such as `bonsai-2:9b` or `qwen3:4b`.
+
+### The chat says the API key was turned down, there's no credit, or to wait
+
+These come from a cloud model's service (OpenRouter, for example), and the message includes what the
+service said.
+
+| Message | Fix |
+| --- | --- |
+| "turned the API key down" | Paste the key again in Settings, AGENT MODEL, **API KEY**, or make a new one at the service. A key that was deleted or copied with a missing character gives this. |
+| "has no credit left" | Add credit at the service, or pick a model that is free there (on OpenRouter, names ending in `:free`). |
+| "is limiting requests for now" | Wait a minute and ask again. Free models have tight limits; a paid one doesn't hit this in normal use. |
+| "doesn't know the model" | Check **MODEL** in Settings: it must be written exactly as the service names it, such as `openai/gpt-oss-120b`. |
+| "can't use tools" | Pick a model with tool calling ([Using OpenRouter instead](#using-openrouter-instead) has some). |
 
 ### Answers are very slow
 
