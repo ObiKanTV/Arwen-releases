@@ -6,7 +6,7 @@ Arwen is a private project. This file lists the third-party material that ships 
 
 `src/Arwen.GameData/Data/materials.json`, `commodities.json`, `blueprints.json`, `experimentals.json`,
 `engineers.json`, `modules.json` and `ships.json` are derived from [EliteDangerousCore](https://github.com/EDDiscovery/EliteDangerousCore)
-by the EDDiscovery development team, commit `0ee56d0327659dc704ce9540c240e05ef3e7edcd`.
+by the EDDiscovery development team, commit `e19933b649c4936846287b52d8d2b9f2dc9a0f79`.
 
 `src/Arwen.GameData/Data/onfoot.json` (on-foot engineering: micro-resources, suit and weapon grade upgrades and
 modifications) is built by `tools/gamedata/import_onfoot.py` from EliteDangerousCore's `MCMRType.cs` and

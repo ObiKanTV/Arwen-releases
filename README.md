@@ -13,6 +13,14 @@ Arwen is free, in early access: expect rough edges, and please [report what you 
 Not affiliated with or endorsed by Frontier Developments. Elite Dangerous is a trademark of Frontier
 Developments plc. See the [disclaimer](DISCLAIMER.md).
 
+![Arwen's Now view: location, ship, fuel and cargo, the route and what just happened, with the chat on the right](screenshots/now.png)
+
+More: [Ship](screenshots/ship.png) · [Engineering](screenshots/engineering.png) ·
+[Starport](screenshots/starport.png) · [Nav](screenshots/nav.png) · [Market](screenshots/market.png) ·
+[Exploration](screenshots/exploration.png) · [Commander](screenshots/commander.png) ·
+[Settings](screenshots/settings.png). The screenshots show an example commander.
+
+- [AI chat (optional)](#ai-chat-optional)
 - [Install](#install)
 - [First start](#first-start)
 - [The screen](#the-screen)
@@ -23,7 +31,110 @@ Developments plc. See the [disclaimer](DISCLAIMER.md).
 - [Updates](#updates)
 - [Settings](#settings)
 - [Your data and privacy](#your-data-and-privacy)
+- [Troubleshooting](#troubleshooting)
 - [Help and bug reports](#help-and-bug-reports)
+
+## AI chat (optional)
+
+**Arwen works without an AI model.** Every view, the Now bar, the Stream Deck's view and live-value
+keys, engineering plans and all the searches run on Arwen alone. Only the chat on the right, where you
+ask Arwen questions in plain words, needs a language model. Until there is one, the chat input is
+off and says why, and the status bar shows **AI CHAT · OLLAMA NOT RUNNING** or
+**AI CHAT · MODEL MISSING**.
+
+| Works without a model | Needs a model |
+| --- | --- |
+| All views: Now, Commander, Nav, Ship, Engineering, Mining, Exploration, Market, Routes, Starport, Log | Asking questions in the chat |
+| Engineering plans, saved blueprints and the steps to get there | Push-to-talk (HOLD TO TALK, the deck's TALK key): your words go to the chat |
+| Market, material, mining and station searches | Stream Deck keys that ask Arwen a question of your own |
+| Saved routes and lists, made by hand | Asking Arwen to save a route or list for you |
+| Stream Deck keys for views, Back, Home and live values | |
+| Open in Coriolis, updates, themes | |
+| Claude Code and Claude Desktop over MCP (they bring their own model, see [below](#using-claude-desktop-instead)) | |
+
+### Requirements
+
+- **[Ollama](https://ollama.com)**, free, which runs the model on your PC (or another PC on your
+  network). Nothing you ask leaves your network. A cloud model (OpenAI-compatible or Anthropic, with
+  your own API key) works too: pick it in Settings, AGENT MODEL.
+- **A model that can call tools.** Arwen answers by calling its tools (your ship, your materials, the
+  market) and the model only puts the results into words, so a model without tool calling can't
+  answer. The default is `bonsai-2:9b`. Other models with tool calling work too, for example
+  `qwen3:4b`.
+- **Room on your graphics card.** Elite Dangerous: Odyssey uses most of an 8 GB card on its own,
+  and the model needs video memory of its own. Go by what `ollama ps` shows rather than by the
+  model's name: the default `bonsai-2:9b` is a compressed 9B model and takes about 3 GB with Arwen's
+  settings (8K context). If the model doesn't fit, Ollama puts part of it in main memory and answers
+  get slow. On an 8 GB card, try one or more of these:
+  - cap the game at 60 fps and lower its texture quality;
+  - use a small model such as `qwen3:4b`, and untick **Let the model think before it answers** in
+    Settings, AGENT MODEL (thinking makes answers about twice as slow);
+  - run the model on the processor instead (much slower, but it leaves the graphics card to the
+    game): set the Windows environment variable `CUDA_VISIBLE_DEVICES` to `-1` (NVIDIA) or
+    `HIP_VISIBLE_DEVICES` to `-1` (AMD), then quit Ollama from its tray icon and start it again.
+
+### Setup on Windows
+
+1. Download Ollama from [ollama.com/download](https://ollama.com/download) and install it. It runs in
+   the background (an icon in the tray) and starts with Windows.
+2. Open PowerShell or Command Prompt and get a model:
+
+   ```
+   ollama pull bonsai-2:9b
+   ```
+
+   or another model with tool calling, such as `ollama pull qwen3:4b`.
+3. Check the name it was installed under:
+
+   ```
+   ollama list
+   ```
+
+4. In Arwen, open **Settings, AGENT MODEL**: **PROVIDER** "Ollama on this PC", **MODEL** the name
+   exactly as `ollama list` shows it, **OLLAMA ADDRESS** `http://127.0.0.1:11434` (the default).
+   Press **USE THIS MODEL**.
+5. The status bar now says **AI CHAT CONNECTED** and the chat header **LINK OK**. Ask something,
+   for example "where am I?".
+
+### Does it fit next to the game?
+
+Start Elite Dangerous, ask Arwen a question, then run:
+
+```
+ollama ps
+```
+
+The PROCESSOR column says where the model runs. `100% GPU` is what you want. Something like
+`45%/55% CPU/GPU` means it didn't fit on the graphics card and part of it runs on the processor:
+answers will be slow, and the game may stutter. Use the tips under [Requirements](#requirements).
+
+### Using Claude Desktop instead
+
+If you use Claude Desktop, it can use Arwen's tools with its own model, and you don't need Ollama
+at all:
+
+1. Install Arwen with **Let Claude use Arwen's tools** ticked (or run the installer again and tick
+   it), and in Arwen turn on **Settings, CLAUDE · MCP, LET CLAUDE USE ARWEN'S TOOLS**.
+2. Press **COPY DESKTOP CONFIG** there, or write the entry yourself. In Claude Desktop open
+   Settings, Developer, **Edit Config**, and add Arwen under `mcpServers`:
+
+   ```json
+   {
+     "mcpServers": {
+       "arwen": {
+         "command": "C:\\Users\\<your Windows user>\\AppData\\Local\\Programs\\Arwen\\Arwen.McpBridge.exe",
+         "args": []
+       }
+     }
+   }
+   ```
+
+   That is where the installer puts Arwen. The entry holds no key: the bridge gets it from Windows
+   Credential Manager.
+3. Restart Claude Desktop. Arwen has to be running while you use it.
+
+Claude Code works the same way: **COPY COMMAND** in the same panel gives the one command to run. See
+[Claude](#claude).
 
 ## Install
 
@@ -52,8 +163,9 @@ and Arwen follows along. Three things are worth setting in **Settings** early:
 
 - **HOME:** your home system. Engineers, market searches and mining spots are planned from there,
   and the Now bar shows how far you are from it. Type a system or use the one you're in.
-- **AGENT MODEL:** the model that answers your questions (see [Asking Arwen](#asking-arwen)).
-  Everything else works without one.
+- **AGENT MODEL:** the model that answers your questions in the chat (see
+  [AI chat (optional)](#ai-chat-optional)). Everything else works without one. The first time, the
+  chat shows a short note about this; **DON'T SHOW AGAIN** hides it for good.
 - **GAME JOURNAL:** only if Arwen says it can't find your journals, for example when the game
   writes them somewhere unusual.
 
@@ -106,7 +218,10 @@ Ship and on-foot engineering, from unlocking engineers to the last roll.
   are and what unlocks them next. Click an engineer to see more.
 - **Saved blueprints:** pick the blueprints and grades you want for a ship. Arwen shows what you can
   roll now, and **all materials together**: what your blueprints need, what you hold and what's
-  short.
+  short. A blueprint belongs to a kind of module, not to one mount: if you engineer it on another,
+  identical module (say the third shield booster instead of the first), it still counts as done.
+  Modules are shown by their names in game, such as "A Shield Booster", and a blueprint whose module
+  is no longer fitted says NOT FITTED.
 - **The plan:** numbered steps to get there: which engineers to unlock, materials to trade or
   gather, and which engineer to visit for what. It picks the engineers nearest your home, so it
   won't send you to Colonia from the bubble. Progress ticks off as you play.
@@ -165,11 +280,11 @@ from your game and can open the view that shows the answer. For example:
 - "Which of my ships can carry 400 tonnes?"
 - "Where should I mine Platinum for merits?"
 
-The answers come from a language model you choose in Settings, AGENT MODEL:
+The answers come from a language model you choose in Settings, AGENT MODEL. The chat is optional
+and needs that model; [AI chat (optional)](#ai-chat-optional) has the setup.
 
-- **Local (recommended):** install [Ollama](https://ollama.com) and a model, e.g.
-  `ollama pull bonsai-2:9b`. It runs on your PC, or another PC on your network; nothing leaves your
-  network.
+- **Local (recommended):** [Ollama](https://ollama.com) and a model, e.g. `ollama pull bonsai-2:9b`.
+  It runs on your PC, or another PC on your network; nothing leaves your network.
 - **Cloud:** an OpenAI-compatible service or Anthropic, with your own API key. Your question and
   the game data it needs then go to that service.
 
@@ -195,7 +310,8 @@ Arwen's colours.
 If you use Claude, it can read your game through Arwen and change your plans, lists and routes,
 for example "plan the engineering for my ship". It's off unless you ticked it in the installer;
 turn it on in Settings, CLAUDE · MCP, which also has the one-time setup for Claude Code and Claude
-Desktop. Changes Claude makes show in the Log view.
+Desktop ([step by step](#using-claude-desktop-instead)). Claude uses its own model, so this works
+without Ollama. Changes Claude makes show in the Log view.
 
 ## Updates
 
@@ -231,6 +347,38 @@ Arwen goes online only for:
 
 To uninstall: Windows Settings, Apps, **Arwen**, Uninstall. Your data stays in
 `%LOCALAPPDATA%\Arwen`, so a reinstall keeps your plans; delete that folder to remove it too.
+
+## Troubleshooting
+
+### The chat says "error 10061" or "127.0.0.1:11434"
+
+The message may be in your Windows display language (in Spanish, for example, it reads "No se puede
+establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión"). Error
+10061 means nothing answered at the AI model's address: the chat couldn't reach Ollama. Newer
+versions of Arwen say "Can't reach the AI model at http://127.0.0.1:11434" instead. The rest of
+Arwen is unaffected.
+
+| Cause | Fix |
+| --- | --- |
+| Ollama isn't installed | Follow [Setup on Windows](#setup-on-windows), or use the views without the chat. |
+| Ollama isn't running | Start **Ollama** from the Start menu (its icon appears in the tray). Check with `ollama list` in PowerShell: it should list your models, not an error. |
+| Wrong address | In Settings, AGENT MODEL, **OLLAMA ADDRESS** must be where Ollama listens: `http://127.0.0.1:11434` on this PC. In a browser that address shows "Ollama is running". For Ollama on another PC, use that PC's address and let Ollama listen on the network there (`OLLAMA_HOST` set to `0.0.0.0`, and port 11434 open in its firewall). |
+
+### The chat says the model isn't installed
+
+Ollama is running but doesn't have the model named in Settings, AGENT MODEL, **MODEL**. Install it
+with `ollama pull <model>`, using the name shown in the message, or change **MODEL** to one that
+`ollama list` shows.
+
+### The chat says the model can't use tools
+
+Arwen's answers come from its tools, so the model has to support tool calling. Pick one that does,
+such as `bonsai-2:9b` or `qwen3:4b`.
+
+### Answers are very slow
+
+The model probably doesn't fit on the graphics card next to the game: see
+[Does it fit next to the game?](#does-it-fit-next-to-the-game).
 
 ## Help and bug reports
 
